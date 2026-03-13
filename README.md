@@ -1,372 +1,190 @@
-# LearnIQ – CBSE Grade 8 Science AI Tutor
+# LearnIQ
 
-> LearnIQ is an AI-powered, textbook-grounded tutor for CBSE Grade 8 Science. It begins as a retrieval-based Q&A tutor using the NCERT textbook and evolves into a broader learning system with adaptive quizzes, teacher dashboards, bilingual support, and GTM-ready validation assets.
+**AI Science Tutor for CBSE Grade 8**
 
----
+LearnIQ answers student questions using NCERT Grade 8 Science study materials. Every answer is grounded in the source text with citations — no hallucination.
 
-## Vision
-
-LearnIQ aims to turn static school textbooks into an interactive, explainable, and personalized learning experience.
-
-The product starts with a narrow but important promise:
-
-- answer student questions from the NCERT Grade 8 Science textbook
-- cite the source clearly
-- avoid unsupported hallucinated answers
-
-Over time, LearnIQ expands into:
-
-- retrieval quality benchmarking
-- adaptive quizzes aligned with CBSE patterns
-- teacher dashboards and insight views
-- Hindi / bilingual experiences
-- market validation and GTM assets
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.54-red)
+![LangChain](https://img.shields.io/badge/LangChain-1.2-green)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-1.5-orange)
 
 ---
 
-## Current Status
+## What It Does
 
-Current repo status: **Phase 1 MVP is working locally**
-
-Completed:
-- NCERT Grade 8 Science textbook ingestion
-- chunking, embeddings, and persistent ChromaDB vector store
-- Streamlit chat interface
-- grounded answer generation with citations
-- fallback response when answer is not found in textbook
-
-Current focus:
-- improve retrieval quality
-- strengthen follow-up handling
-- add benchmarks and evaluation
-- prepare for quiz and dashboard phases
+- Answers Grade 8 Science questions grounded strictly in source materials
+- Cites chapter name and page number with every answer
+- Handles follow-up questions with automatic query rewriting
+- Detects topic shifts so context doesn't bleed across subjects
+- Shows expandable textbook passages so students can read the source
+- Returns a friendly message when the answer isn't in the materials
+- Supports multiple PDF sources — drop files into a folder and ingest
 
 ---
 
-## Getting started (execution sequence)
+## Quick Start
 
-Run these steps **in order** so the app works:
+### 1. Install
 
-1. **One-time setup**
-   - Copy `.env.example` to `.env` and set `OPENAI_API_KEY`.
-   - Place the NCERT Grade 8 Science PDF at `./data/raw/NCERT_Class8_Science.pdf` (or set `TEXTBOOK_PATH` in `.env`).
-   - Install dependencies: `pip install -r requirements.txt`.
-2. **Ingest the textbook** (once per PDF; re-run if you change the PDF or chunking):
-   - `python scripts/ingest_textbook.py`
-3. **Start the app** (whenever you want to use the chat):
-   - `bash scripts/run_app.sh` or `streamlit run app/streamlit_app.py`
+```bash
+git clone https://github.com/Angobaba/learniq.git
+cd learniq
+pip install -r requirements.txt
+```
 
-**One-command sequence (Unix/macOS/Git Bash):** After step 1, you can run `bash scripts/setup_and_run.sh`; it will run ingestion if the ChromaDB store is missing, then start the app.
+### 2. Configure
 
-The app requires an existing ChromaDB store, so **ingestion must run before the app** the first time. For the full sequence (including phase order and ingestion pipeline steps), see [docs/execution_sequence.md](docs/execution_sequence.md).
+```bash
+cp .env.example .env
+```
 
----
+Edit `.env` and add your OpenAI API key:
 
-## Project Phases
+```
+OPENAI_API_KEY=sk-...
+```
 
-## Phase 0 — Setup and Foundation
+### 3. Add Source Materials
 
-This phase establishes the technical and product foundations.
+Place your Grade 8 Science PDFs in `data/raw/`:
 
-### Goals
-- define MVP scope
-- set up repository and branch strategy
-- configure environment variables
-- prepare source textbook corpus
-- create ingestion pipeline
-- validate local setup
-- define benchmark questions
+```
+data/raw/
+  english/full_book/NCERT_Class8_Science_English_Full.pdf   (included)
+  exemplar/NCERT_Exemplar_Grade8.pdf                        (optional)
+  question_banks/CBSE_Previous_Year_Grade8.pdf              (optional)
+```
 
-### Outputs
-- working repo scaffold
-- `.env` configuration
-- merged NCERT full-book PDF
-- ingestion pipeline
-- ChromaDB vector store
-- initial benchmark plan
+Any PDF in `data/raw/` (including subfolders) will be automatically discovered and ingested.
 
----
+### 4. Ingest
 
-## Phase 1 — Textbook-Grounded Q&A MVP
+```bash
+python scripts/ingest_textbook.py
+```
 
-This is the current core product milestone.
+This loads all PDFs, chunks them by chapter (800 tokens, 100 overlap), embeds them, and saves to ChromaDB. Each source is tagged so citations show which material the answer came from.
 
-### Goals
-- answer student questions using only the NCERT Grade 8 Science textbook
-- retrieve relevant chunks using embeddings
-- generate grounded answers with citations
-- clearly refuse when answer is not found in the textbook
-- provide a simple conversational UI for students
+### 5. Run
 
-### Features
-- PDF ingestion
-- chunking and embedding
-- persistent ChromaDB vector store
-- top-k retrieval
-- grounded answer generation
-- source citations in the UI
-- Streamlit-based frontend
+```bash
+streamlit run app/streamlit_app.py
+```
 
-### Success Criteria
-- reliable answers for common textbook questions
-- low hallucination rate
-- clear citation display
-- stable local demo experience
+Open **http://localhost:8501** in your browser.
 
 ---
 
-## Phase 2 — Retrieval Quality and Benchmarking
+## How It Works
 
-This phase improves answer quality, trust, and debugability.
+```
+Student Question
+      |
+      v
+  Query Rewriting (follow-ups become standalone queries)
+      |
+      v
+  Topic Shift Detection (cosine similarity on embeddings)
+      |
+      v
+  Retrieval (ChromaDB, cosine distance, score threshold 0.35, top-6)
+      |
+      v
+  Answer Generation (grounded in retrieved chunks only)
+      |
+      v
+  Citations + Expandable Passages
+```
 
-### Goals
-- improve chunking strategy
-- improve retrieval precision and recall
-- tune `TOP_K`, chunk size, and overlap
-- benchmark common textbook questions
-- debug follow-up question behavior
-
-### Planned Work
-- benchmark dataset for textbook questions
-- retrieval testing
-- citation validation
-- chunk inspection
-- prompt tuning
-- light multi-turn query rewriting / history support
-
-### Success Criteria
-- fewer false fallbacks
-- better answer consistency
-- stronger performance on concept flows and multi-turn queries
-
----
-
-## Phase 3 — Adaptive Quiz Layer
-
-This phase expands LearnIQ from answering to active learning.
-
-### Goals
-- generate quiz questions aligned with textbook concepts and CBSE patterns
-- evaluate student responses
-- adapt difficulty based on performance
-- support chapter-level practice and revision
-
-### Planned Data Sources
-- CBSE syllabus
-- question banks
-- past year question papers
-
-### Planned Features
-- MCQ generation
-- short-answer question generation
-- quiz scoring
-- concept-level weakness tagging
-- revision recommendations
-
-### Success Criteria
-- quiz quality aligns with curriculum expectations
-- meaningful variation in difficulty
-- useful student practice flow
-
----
-
-## Phase 4 — Teacher Dashboard and Analytics
-
-This phase adds value for teachers and school demos.
-
-### Goals
-- visualize student weaknesses
-- surface repeated concept confusion
-- show chapter-level mastery trends
-- demonstrate class-level learning insights
-
-### Planned Data Sources
-- synthetic student interaction logs initially
-- later real anonymized session data
-
-### Planned Features
-- weak-topic heatmap
-- repeated-question detection
-- chapter mastery summary
-- performance trends
-- teacher-facing demo dashboard
-
-### Success Criteria
-- clear teacher value proposition
-- useful class-level views
-- strong demo story beyond chatbot functionality
-
----
-
-## Phase 5 — Hindi / Bilingual Support
-
-This phase adds accessibility and product differentiation.
-
-### Goals
-- support Hindi queries
-- support bilingual / Hinglish interaction
-- improve accessibility for Indian learners
-- strengthen demos with localized interaction
-
-### Planned Approach
-- query normalization / translation layer
-- bilingual retrieval support
-- optional Hindi textbook support
-- answer translation back to Hindi
-
-### Success Criteria
-- basic Hindi support works reliably
-- stronger demo appeal
-- improved accessibility for non-English-first learners
-
----
-
-## Phase 6 — Market Validation and GTM Assets
-
-This phase supports external storytelling and scale readiness.
-
-### Goals
-- prepare market validation narrative
-- support parent / school demos
-- create investor-facing proof points
-- ground opportunity sizing using credible education datasets
-
-### Planned Data Sources
-- ASER
-- UDISE+
-- RedSeer
-- other education ecosystem references
-
-### Outputs
-- GTM documents
-- deck inputs
-- validation notes
-- market opportunity framing
-
----
-
-## Features
-
-### Current Features
-- 📚 Answers grounded **exclusively** in the NCERT Grade 8 Science textbook
-- 🔍 Source citations included with every answer
-- 🛡️ Clear fallback when answer is not found in the textbook
-- 💬 Conversational Streamlit chat interface
-- 🔁 ChromaDB persistence — embeddings built once and reused
-
-### Planned Features
-- 🧪 Retrieval benchmarking and tuning
-- 📝 Adaptive quizzes and chapter practice
-- 👩‍🏫 Teacher dashboard and analytics
-- 🌐 Hindi / bilingual support
-- 📊 Market validation and GTM assets
-
----
-
-## Data Architecture
-
-Not all project data is used in the same way. LearnIQ separates data into multiple layers.
-
-### 1. Core Textbook Corpus
-Used for student-facing answers.
-
-Includes:
-- NCERT Grade 8 Science textbook
-- later possibly Hindi Science textbook
-
-### 2. Assessment Corpus
-Used for quiz generation and alignment.
-
-Includes:
-- CBSE syllabus
-- question bank
-- past year papers
-
-### 3. Analytics Dataset
-Used for dashboard and teacher insights.
-
-Includes:
-- synthetic student interactions
-- later anonymized session logs
-
-### 4. Language Layer
-Used for Hindi / bilingual experiences.
-
-Includes:
-- translation or NLP services
-- later bilingual textbook handling
-
-### 5. Market Validation Layer
-Used for GTM and pitch materials.
-
-Includes:
-- ASER
-- UDISE+
-- RedSeer
-
-### Design Principle
-- textbook teaches
-- assessment corpus tests
-- analytics data demonstrates
-- language layer translates
-- market data supports GTM
-
----
-
-## Tech Stack
-
-| Component | Library / Service |
-|-----------|-------------------|
-| UI | Streamlit |
-| LLM | OpenAI GPT-4o-mini |
-| Embeddings | OpenAI text-embedding-3-small |
-| RAG framework | LangChain |
-| Vector store | ChromaDB (persistent) |
-| PDF loading | PyPDF (via LangChain) |
-| Language support (planned) | Bhashini / translation layer |
-| Analytics storage (planned) | JSON / CSV / SQLite / Postgres |
+**Key design decisions:**
+- Chunks never cross chapter boundaries — each chunk belongs to one chapter
+- Score thresholding filters out low-relevance chunks before the LLM sees them
+- Binary confidence: either a cited answer or a clear "not found" — no gray zone
+- Dual session state: display messages (Streamlit) and LangChain message objects are kept separate
 
 ---
 
 ## Project Structure
 
-```text
+```
 learniq/
 ├── app/
-│   └── streamlit_app.py       # Main chat interface
+│   └── streamlit_app.py         # Chat interface (dark theme UI)
 ├── rag/
-│   ├── loader.py              # PDF loader
-│   ├── chunker.py             # Text splitter
-│   ├── embeddings.py          # Embedding helper
-│   ├── vector_store.py        # ChromaDB create/load
-│   ├── retriever.py           # Top-k chunk retrieval
-│   ├── qa_chain.py            # Grounded answer generation
-│   └── prompts.py             # System prompts / guardrails
+│   ├── loader.py                # PDF loading + multi-source directory scan
+│   ├── chunker.py               # Chapter-aware token-based chunking
+│   ├── embeddings.py            # OpenAI embedding wrapper
+│   ├── vector_store.py          # ChromaDB with cosine distance
+│   ├── retriever.py             # Score-threshold retriever (k=6)
+│   ├── qa_chain.py              # Conversational RAG chain + topic shift
+│   └── prompts.py               # System prompts and fallback messages
 ├── scripts/
-│   ├── ingest_textbook.py     # One-time ingestion pipeline
-│   ├── run_app.sh             # App launcher
-│   └── setup_and_run.sh       # Execution sequence: ingest if needed, then app
+│   ├── ingest_textbook.py       # Multi-source ingestion pipeline
+│   ├── run_app.sh               # App launcher
+│   └── setup_and_run.sh         # Ingest + run in one command
 ├── data/
-│   ├── raw/
-│   │   ├── english/
-│   │   │   └── full_book/
-│   │   ├── hindi/
-│   │   ├── assessment/
-│   │   ├── analytics/
-│   │   └── market/
-│   ├── processed/             # Intermediate artefacts (optional)
+│   ├── raw/                     # Drop PDFs here (scanned recursively)
+│   ├── processed/
 │   └── benchmarks/
-│       └── sample_benchmark.json
-├── docs/
-│   ├── architecture.md
-│   ├── execution_sequence.md   # Runtime and phase execution order
-│   ├── prompt_guardrails.md
-│   └── roadmap.md
-├── tests/
-│   ├── test_retrieval.py
-│   ├── test_citations.py
-│   └── benchmark_runner.py
+├── .streamlit/
+│   └── config.toml              # Dark theme configuration
 ├── .env.example
 ├── requirements.txt
-├── CONTRIBUTING.md
 └── README.md
+```
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Frontend | Streamlit (custom dark theme) |
+| LLM | OpenAI GPT-4o-mini |
+| Embeddings | OpenAI text-embedding-3-small |
+| RAG Framework | LangChain (langchain-classic) |
+| Vector Store | ChromaDB (persistent, cosine distance) |
+| PDF Loading | PyPDF via LangChain |
+| Chunking | RecursiveCharacterTextSplitter (tiktoken, 800 tokens) |
+
+---
+
+## Adding More Sources
+
+Just drop PDFs into `data/raw/` and re-run ingestion:
+
+```bash
+# Add your files to any subfolder under data/raw/
+cp new_material.pdf data/raw/
+
+# Re-ingest everything
+python scripts/ingest_textbook.py
+```
+
+The ingestion script will:
+- Find all PDFs recursively in `data/raw/`
+- Tag each with a source name derived from the filename
+- Chunk by chapter with metadata (chapter, page, source)
+- Rebuild the vector store
+
+Citations in the app will show which source the answer came from.
+
+---
+
+## Roadmap
+
+- [x] **Phase 0-1: MVP** — RAG pipeline, chat UI, citations, fallback
+- [x] **Phase 2: Retrieval Tuning** — Chapter-aware chunking, query rewriting, score thresholding, multi-turn support
+- [ ] **Phase 3: Benchmarking** — RAGAS evaluation, Context Recall >= 0.75 gate
+- [ ] **Phase 4: Quiz Foundation** — Chapter-aligned MCQs and short-answer questions
+- [ ] **Phase 5: Adaptive Quizzes** — Weak concept tagging, difficulty adaptation
+- [ ] **Phase 6: Teacher Dashboard** — Concept heatmap, mastery trends
+- [ ] **Phase 7: Demo Hardening** — Error handling, caching, latency optimization
+- [ ] **Phase 8: Hindi Support** — Translate-first bilingual pipeline
+
+---
+
+## License
+
+MIT
