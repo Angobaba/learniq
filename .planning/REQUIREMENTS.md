@@ -9,10 +9,10 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Retrieval Quality
 
-- [ ] **RETR-01**: System uses optimized chunk size (~800 tokens) and overlap (~100 tokens) for textbook prose
+- [x] **RETR-01**: System uses optimized chunk size (~800 tokens) and overlap (~100 tokens) for textbook prose
 - [ ] **RETR-02**: System rewrites follow-up queries using conversation history before retrieval
-- [ ] **RETR-03**: System applies relevance score thresholding to filter low-quality retrieved chunks
-- [ ] **RETR-04**: System returns top-k results with tuned k value (~6) for better recall
+- [x] **RETR-03**: System applies relevance score thresholding to filter low-quality retrieved chunks
+- [x] **RETR-04**: System returns top-k results with tuned k value (~6) for better recall
 - [ ] **RETR-05**: Citations display chapter name and page reference alongside answer text
 - [ ] **RETR-06**: System handles multi-turn question chains (e.g., define -> types -> examples -> application)
 
@@ -92,10 +92,10 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RETR-01 | Phase 2 | Pending |
+| RETR-01 | Phase 2 | Complete (02-01) |
 | RETR-02 | Phase 2 | Pending |
-| RETR-03 | Phase 2 | Pending |
-| RETR-04 | Phase 2 | Pending |
+| RETR-03 | Phase 2 | Complete (02-01) |
+| RETR-04 | Phase 2 | Complete (02-01) |
 | RETR-05 | Phase 2 | Pending |
 | RETR-06 | Phase 2 | Pending |
 | BENCH-01 | Phase 3 | Pending |
@@ -133,4 +133,4 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ---
 *Requirements defined: 2026-03-14*
-*Last updated: 2026-03-14 — traceability filled after roadmap creation*
+*Last updated: 2026-03-14 — RETR-01, RETR-03, RETR-04 marked complete after 02-01 execution*
