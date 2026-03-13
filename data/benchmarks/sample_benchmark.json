@@ -1,0 +1,32 @@
+[
+  {
+    "question": "What is photosynthesis?",
+    "expected_keywords": ["photosynthesis", "chlorophyll", "sunlight", "glucose", "food"],
+    "chapter": "Chapter 1 – Nutrition in Plants",
+    "notes": "Core definition question"
+  },
+  {
+    "question": "What are the functions of the cell membrane?",
+    "expected_keywords": ["cell membrane", "selectively permeable", "protection", "transport"],
+    "chapter": "Chapter 8 – Cell Structure and Functions",
+    "notes": ""
+  },
+  {
+    "question": "Explain the water cycle.",
+    "expected_keywords": ["evaporation", "condensation", "precipitation", "water cycle"],
+    "chapter": "Chapter 5 – Coal and Petroleum / Water Resources",
+    "notes": ""
+  },
+  {
+    "question": "What is friction?",
+    "expected_keywords": ["friction", "surfaces", "force", "motion"],
+    "chapter": "Chapter 12 – Friction",
+    "notes": ""
+  },
+  {
+    "question": "What is the role of microorganisms in the environment?",
+    "expected_keywords": ["decomposers", "microorganisms", "soil", "nitrogen cycle"],
+    "chapter": "Chapter 2 – Microorganisms: Friend and Foe",
+    "notes": ""
+  }
+]
