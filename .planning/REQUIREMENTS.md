@@ -92,45 +92,45 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RETR-01 | TBD | Pending |
-| RETR-02 | TBD | Pending |
-| RETR-03 | TBD | Pending |
-| RETR-04 | TBD | Pending |
-| RETR-05 | TBD | Pending |
-| RETR-06 | TBD | Pending |
-| BENCH-01 | TBD | Pending |
-| BENCH-02 | TBD | Pending |
-| BENCH-03 | TBD | Pending |
-| BENCH-04 | TBD | Pending |
-| BENCH-05 | TBD | Pending |
-| BENCH-06 | TBD | Pending |
-| QUIZ-01 | TBD | Pending |
-| QUIZ-02 | TBD | Pending |
-| QUIZ-03 | TBD | Pending |
-| QUIZ-04 | TBD | Pending |
-| QUIZ-05 | TBD | Pending |
-| QUIZ-06 | TBD | Pending |
-| QUIZ-07 | TBD | Pending |
-| DASH-01 | TBD | Pending |
-| DASH-02 | TBD | Pending |
-| DASH-03 | TBD | Pending |
-| DASH-04 | TBD | Pending |
-| DASH-05 | TBD | Pending |
-| DASH-06 | TBD | Pending |
-| LANG-01 | TBD | Pending |
-| LANG-02 | TBD | Pending |
-| LANG-03 | TBD | Pending |
-| LANG-04 | TBD | Pending |
-| DEMO-01 | TBD | Pending |
-| DEMO-02 | TBD | Pending |
-| DEMO-03 | TBD | Pending |
-| DEMO-04 | TBD | Pending |
+| RETR-01 | Phase 2 | Pending |
+| RETR-02 | Phase 2 | Pending |
+| RETR-03 | Phase 2 | Pending |
+| RETR-04 | Phase 2 | Pending |
+| RETR-05 | Phase 2 | Pending |
+| RETR-06 | Phase 2 | Pending |
+| BENCH-01 | Phase 3 | Pending |
+| BENCH-02 | Phase 3 | Pending |
+| BENCH-03 | Phase 3 | Pending |
+| BENCH-04 | Phase 3 | Pending |
+| BENCH-05 | Phase 3 | Pending |
+| BENCH-06 | Phase 3 | Pending |
+| QUIZ-01 | Phase 4 | Pending |
+| QUIZ-02 | Phase 4 | Pending |
+| QUIZ-03 | Phase 4 | Pending |
+| QUIZ-04 | Phase 5 | Pending |
+| QUIZ-05 | Phase 5 | Pending |
+| QUIZ-06 | Phase 5 | Pending |
+| QUIZ-07 | Phase 4 | Pending |
+| DASH-01 | Phase 6 | Pending |
+| DASH-02 | Phase 6 | Pending |
+| DASH-03 | Phase 6 | Pending |
+| DASH-04 | Phase 6 | Pending |
+| DASH-05 | Phase 6 | Pending |
+| DASH-06 | Phase 6 | Pending |
+| LANG-01 | Phase 8 | Pending |
+| LANG-02 | Phase 8 | Pending |
+| LANG-03 | Phase 8 | Pending |
+| LANG-04 | Phase 8 | Pending |
+| DEMO-01 | Phase 7 | Pending |
+| DEMO-02 | Phase 7 | Pending |
+| DEMO-03 | Phase 7 | Pending |
+| DEMO-04 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 33 total
-- Mapped to phases: 0
-- Unmapped: 33 (pending roadmap creation)
+- Mapped to phases: 33
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-14*
-*Last updated: 2026-03-14 after initial definition*
+*Last updated: 2026-03-14 — traceability filled after roadmap creation*
