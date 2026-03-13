@@ -1,5 +1,10 @@
 """
 vector_store.py – Create or load a ChromaDB persistent vector store.
+
+The collection is configured with cosine distance so that
+``similarity_score_threshold`` retrieval works correctly.  Without an explicit
+distance metric Chroma raises a ValueError when score thresholding is
+requested.
 """
 
 import os
@@ -19,7 +24,8 @@ def build_vector_store(
 ) -> Chroma:
     """Embed a list of document chunks and persist them in ChromaDB.
 
-    If a store already exists at *persist_dir* it will be overwritten.
+    If a store already exists at *persist_dir* the caller is responsible for
+    deleting it first (the ingestion script handles this with shutil.rmtree).
 
     Args:
         chunks: List of chunked Document objects to embed and store.
@@ -27,7 +33,7 @@ def build_vector_store(
             the CHROMA_PERSIST_DIR environment variable (or ./chroma_db).
 
     Returns:
-        A Chroma vector store instance.
+        A Chroma vector store instance configured with cosine distance.
     """
     if persist_dir is None:
         persist_dir = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
@@ -38,6 +44,7 @@ def build_vector_store(
         embedding=embeddings,
         collection_name=COLLECTION_NAME,
         persist_directory=persist_dir,
+        collection_metadata={"hnsw:space": "cosine"},
     )
     return vector_store
 
@@ -49,7 +56,7 @@ def load_vector_store(persist_dir: str | None = None) -> Chroma:
         persist_dir: Directory where ChromaDB data was persisted.
 
     Returns:
-        A Chroma vector store instance.
+        A Chroma vector store instance configured with cosine distance.
 
     Raises:
         FileNotFoundError: If the persist directory does not exist, indicating
@@ -70,5 +77,6 @@ def load_vector_store(persist_dir: str | None = None) -> Chroma:
         collection_name=COLLECTION_NAME,
         embedding_function=embeddings,
         persist_directory=persist_dir,
+        collection_metadata={"hnsw:space": "cosine"},
     )
     return vector_store
