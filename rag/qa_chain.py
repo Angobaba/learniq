@@ -120,6 +120,7 @@ def _extract_citations(docs: List[Document], max_citations: int = 2) -> List[Dic
     for doc in docs:
         chapter = doc.metadata.get("chapter", "Unknown Chapter")
         page = doc.metadata.get("page", "?")
+        source_name = doc.metadata.get("source_name", "")
         key = (chapter, page)
         if key not in seen:
             seen.add(key)
@@ -127,6 +128,7 @@ def _extract_citations(docs: List[Document], max_citations: int = 2) -> List[Dic
                 {
                     "chapter": chapter,
                     "page": page,
+                    "source_name": source_name,
                     "passage": doc.page_content.strip()[:600],  # trim very long passages
                 }
             )

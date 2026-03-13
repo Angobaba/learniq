@@ -43,6 +43,25 @@ Current focus:
 
 ---
 
+## Getting started (execution sequence)
+
+Run these steps **in order** so the app works:
+
+1. **One-time setup**
+   - Copy `.env.example` to `.env` and set `OPENAI_API_KEY`.
+   - Place the NCERT Grade 8 Science PDF at `./data/raw/NCERT_Class8_Science.pdf` (or set `TEXTBOOK_PATH` in `.env`).
+   - Install dependencies: `pip install -r requirements.txt`.
+2. **Ingest the textbook** (once per PDF; re-run if you change the PDF or chunking):
+   - `python scripts/ingest_textbook.py`
+3. **Start the app** (whenever you want to use the chat):
+   - `bash scripts/run_app.sh` or `streamlit run app/streamlit_app.py`
+
+**One-command sequence (Unix/macOS/Git Bash):** After step 1, you can run `bash scripts/setup_and_run.sh`; it will run ingestion if the ChromaDB store is missing, then start the app.
+
+The app requires an existing ChromaDB store, so **ingestion must run before the app** the first time. For the full sequence (including phase order and ingestion pipeline steps), see [docs/execution_sequence.md](docs/execution_sequence.md).
+
+---
+
 ## Project Phases
 
 ## Phase 0 — Setup and Foundation
@@ -325,7 +344,8 @@ learniq/
 │   └── prompts.py             # System prompts / guardrails
 ├── scripts/
 │   ├── ingest_textbook.py     # One-time ingestion pipeline
-│   └── run_app.sh             # App launcher
+│   ├── run_app.sh             # App launcher
+│   └── setup_and_run.sh       # Execution sequence: ingest if needed, then app
 ├── data/
 │   ├── raw/
 │   │   ├── english/
@@ -339,6 +359,7 @@ learniq/
 │       └── sample_benchmark.json
 ├── docs/
 │   ├── architecture.md
+│   ├── execution_sequence.md   # Runtime and phase execution order
 │   ├── prompt_guardrails.md
 │   └── roadmap.md
 ├── tests/

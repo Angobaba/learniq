@@ -108,6 +108,12 @@ def chunk_documents(
         for chunk in chapter_chunks:
             # Ensure chapter key is always present.
             chunk.metadata["chapter"] = chapter_name
+            # Propagate source_name from the original document if present.
+            if "source_name" not in chunk.metadata:
+                for doc in chapter_docs:
+                    if "source_name" in doc.metadata:
+                        chunk.metadata["source_name"] = doc.metadata["source_name"]
+                        break
         all_chunks.extend(chapter_chunks)
 
     return all_chunks
