@@ -9,15 +9,21 @@ Usage:
 Environment variables (set in .env):
     TEXTBOOK_PATH       Path to the PDF file
     CHROMA_PERSIST_DIR  Directory for ChromaDB persistence
-    CHUNK_SIZE          Characters per chunk  (default: 500)
-    CHUNK_OVERLAP       Overlap between chunks (default: 50)
     OPENAI_API_KEY      Your OpenAI API key
     EMBEDDING_MODEL     Embedding model name  (default: text-embedding-3-small)
 """
 
+import io
 import os
+import shutil
 import sys
 import time
+
+# Ensure stdout handles UTF-8 on Windows (avoids UnicodeEncodeError for chapter names)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+else:
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 from dotenv import load_dotenv
 
@@ -51,8 +57,27 @@ def main() -> None:
     print(f"\nTextbook path : {textbook_path}")
     print(f"ChromaDB dir  : {chroma_dir}")
 
-    # Step 1 – Load PDF
-    print("\n[1/3] Loading PDF…")
+    # Step 1 – Delete old vector store to prevent stale 500-char chunks mixing
+    # with new 800-token chapter-aware chunks.
+    print("\n[1/4] Checking for existing vector store…")
+    if os.path.exists(chroma_dir):
+        print(f"      Removing existing vector store at {chroma_dir}...")
+        try:
+            shutil.rmtree(chroma_dir)
+            print("      Old vector store deleted.")
+        except PermissionError as exc:
+            print(
+                f"\n[ERROR] Cannot delete {chroma_dir} — files are locked by another process.\n"
+                "        Close any running instances of the app (Streamlit, Python) that may\n"
+                "        have the ChromaDB open, then re-run this script.\n"
+                f"        Details: {exc}"
+            )
+            sys.exit(1)
+    else:
+        print("      No existing vector store found, starting fresh.")
+
+    # Step 2 – Load PDF
+    print("\n[2/4] Loading PDF…")
     t0 = time.time()
     try:
         documents = load_pdf(textbook_path)
@@ -61,14 +86,20 @@ def main() -> None:
         sys.exit(1)
     print(f"      Loaded {len(documents)} page(s) in {time.time() - t0:.1f}s")
 
-    # Step 2 – Chunk
-    print("\n[2/3] Chunking documents…")
+    # Step 3 – Chunk (chapter-aware, token-based 800/100)
+    print("\n[3/4] Chunking documents…")
     t0 = time.time()
     chunks = chunk_documents(documents)
     print(f"      Created {len(chunks)} chunk(s) in {time.time() - t0:.1f}s")
 
-    # Step 3 – Embed & persist
-    print("\n[3/3] Embedding and persisting to ChromaDB…")
+    # Validate chapter metadata
+    chapters_found = set(c.metadata.get("chapter", "?") for c in chunks)
+    print(f"      Chapters detected: {len(chapters_found)}")
+    for ch in sorted(chapters_found):
+        print(f"        - {ch}")
+
+    # Step 4 – Embed & persist
+    print("\n[4/4] Embedding and persisting to ChromaDB…")
     print("      This may take a few minutes depending on document size.")
     t0 = time.time()
     build_vector_store(chunks, persist_dir=chroma_dir)

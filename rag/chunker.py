@@ -7,6 +7,7 @@ that no chunk ever crosses a chapter boundary.
 """
 
 import re
+import unicodedata
 from typing import Dict, List
 
 from langchain_core.documents import Document
@@ -47,7 +48,10 @@ def build_chapter_map(documents: List[Document]) -> Dict[int, str]:
         match = _CHAPTER_RE.search(sample)
         if match:
             # Clean up trailing whitespace / page numbers from the heading.
+            # Normalize Unicode (PDF text often contains thin spaces, etc.)
             heading = match.group(1).strip()
+            heading = " ".join(heading.split())  # collapse all whitespace variants
+            heading = unicodedata.normalize("NFKC", heading)
             # Rebuild full label, e.g. "Chapter 12: Friction"
             chapter_num_match = re.search(r"Chapter\s+(\d+)", sample, re.IGNORECASE)
             if chapter_num_match:
