@@ -36,7 +36,10 @@ LearnIQ's Phase 0-1 MVP is working — students can ask questions and get cited,
   3. Citations display a human-readable chapter name and page reference (e.g., "Chapter 12: Friction, Page 148") rather than a raw file path
   4. When the retriever finds no chunks above the relevance threshold, the system returns a clear "not found" response rather than a low-confidence partial answer
   5. Re-ingestion with chunk size ~800 tokens and overlap ~100 tokens is complete and the vector store reflects the new settings
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 02-01-PLAN.md — Chapter-aware 800-token chunking, cosine vector store, score-threshold retriever (RETR-01, RETR-03, RETR-04)
+- [ ] 02-02-PLAN.md — Conversational RAG chain with query rewriting, multi-turn, citation display, fallback (RETR-02, RETR-05, RETR-06)
 
 ### Phase 3: Benchmarking and Quality Gate
 **Goal**: Retrieval quality is measurably validated against a representative dataset, and no further phases begin until the quality gate passes
@@ -111,7 +114,7 @@ Phases execute in numeric order: 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 2. Retrieval Tuning | 0/TBD | Not started | - |
+| 2. Retrieval Tuning | 0/2 | Planning complete | - |
 | 3. Benchmarking and Quality Gate | 0/TBD | Not started | - |
 | 4. Quiz Foundation | 0/TBD | Not started | - |
 | 5. Adaptive Quiz and Concept Tracking | 0/TBD | Not started | - |
